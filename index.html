@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 CHOI YU JEONG · PORTFOLIO</title>
+
+<link rel="stylesheet" href="_ds/comsetak-design-system-7d44a841-ef7d-4e1c-8c13-0784c23e2487/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/comsetak-design-system-7d44a841-ef7d-4e1c-8c13-0784c23e2487/tokens/colors.css">
+<link rel="stylesheet" href="_ds/comsetak-design-system-7d44a841-ef7d-4e1c-8c13-0784c23e2487/tokens/typography.css">
+<link rel="stylesheet" href="_ds/comsetak-design-system-7d44a841-ef7d-4e1c-8c13-0784c23e2487/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/comsetak-design-system-7d44a841-ef7d-4e1c-8c13-0784c23e2487/tokens/effects.css">
+<link rel="stylesheet" href="_ds/comsetak-design-system-7d44a841-ef7d-4e1c-8c13-0784c23e2487/tokens/base.css">
+<link rel="stylesheet" href="_ds/comsetak-design-system-7d44a841-ef7d-4e1c-8c13-0784c23e2487/styles.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap">
+
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  * { box-sizing: border-box; }
+
+  /* ---------- site header (revealed after hero) ---------- */
+  .site-header {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+    background: rgba(255,255,255,0.86);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: clamp(12px,2.5vw,20px) clamp(16px,6vw,56px);
+    font-family: 'Computersetak', sans-serif;
+    opacity: 0; transform: translateY(-12px); pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .site-header.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .site-header .brand { display: flex; align-items: baseline; gap: 10px; }
+  .site-header .brand-name { font-size: clamp(14px,3vw,20px); color: var(--ink); font-weight: 700; white-space: nowrap; }
+  .site-header .brand-sub { font-size: clamp(11px,2vw,14px); color: var(--ink-3); letter-spacing: 0.08em; white-space: nowrap; }
+  .site-header nav { display: flex; align-items: center; gap: clamp(12px,3vw,32px); flex-wrap: wrap; }
+  .site-header nav a { font-size: clamp(12px,2vw,15px); color: var(--ink); text-decoration: none; letter-spacing: 0.04em; white-space: nowrap; }
+
+  /* ---------- cursor glow ---------- */
+  .glow {
+    position: absolute; width: 720px; height: 720px;
+    transform: translate(-50%, -50%); border-radius: 50%;
+    background: radial-gradient(circle, #99e27f 0%, #99e27f 45%, rgba(153,226,127,0.4) 70%, transparent 80%);
+    filter: blur(18px); z-index: 0; pointer-events: none;
+    left: -9999px; top: -9999px; opacity: 0;
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative; z-index: 1; width: 100vw; height: 100vh;
+    background: transparent; overflow: hidden; cursor: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stage {
+    position: relative; width: 1359px; height: 833px; flex-shrink: 0;
+    transform-origin: center center; font-family: 'Computersetak', sans-serif;
+  }
+  .stage-layer { position: absolute; inset: 0; }
+  .stage-layer.base { z-index: 2; }
+  .stage-layer.reveal { z-index: 3; pointer-events: none; clip-path: circle(340px at -9999px -9999px); }
+  .mark-2026 { position: absolute; top: 56px; left: 56px; }
+  .mark-2026 img { width: 100px; height: 62px; display: block; }
+  .mark-role { position: absolute; top: 56px; right: 56px; }
+  .mark-role img { width: 432px; height: 28px; display: block; }
+  .mark-main {
+    position: absolute; left: 712px; top: 381px; transform: translate(-50%, -50%);
+    width: 1262px; max-width: 1200px; height: 646px; pointer-events: none;
+  }
+  .hero-connection {
+    position: absolute; left: 649px; top: 733px; width: 150px; height: 47px;
+    transform: translateX(-50%) scale(1); transition: transform 0.18s ease;
+    display: block; cursor: pointer; z-index: 5; border: 0; padding: 0; background: none;
+  }
+  .hero-connection:hover { transform: translateX(-50%) scale(1.08); }
+  .hero-connection img { width: 100%; height: 100%; display: block; }
+
+  /* ---------- contact card ---------- */
+  .card-backdrop {
+    position: absolute; inset: 0; z-index: 10;
+    background: rgba(23,20,15,0.42);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center; cursor: default;
+  }
+  .contact-card {
+    background: #ffffff; border: 2px solid var(--ink); border-radius: 16px;
+    box-shadow: 4px 4px 0 var(--ink); padding: 44px 40px; width: min(320px, 82vw);
+    display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center;
+  }
+  .contact-role { font-family: 'Noto Sans KR', sans-serif; font-weight: 300; font-size: 14px; letter-spacing: 0.06em; color: var(--ink-2); }
+  .contact-name { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 22px; color: var(--ink); margin-top: 6px; }
+  .contact-card .qr { width: 160px; height: 160px; display: block; cursor: pointer; }
+  .contact-hint { font-family: 'Noto Sans KR', sans-serif; font-weight: 300; font-size: 14px; line-height: 1.5; color: var(--ink-3); margin-top: -8px; }
+  .contact-tel { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 15px; color: var(--ink); }
+
+  /* ---------- reveal-on-scroll ---------- */
+  .reveal-up {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal-up.far { transform: translateY(28px); }
+  .reveal-up.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* ---------- interludes ---------- */
+  .band { position: relative; z-index: 1; width: 100%; display: flex; align-items: center; justify-content: center; overflow: visible; }
+  .band-hero-out { height: 60vh; background: transparent; }
+  .band-interlude { height: 42vh; background: #ffffff; }
+  .eyebrow { font-family: 'Source Sans 3', sans-serif; font-size: 14px; letter-spacing: 0.28em; color: var(--ink-3); text-transform: uppercase; }
+  .band-title-display { font-family: 'Computersetak', sans-serif; font-size: clamp(32px,7vw,56px); color: #CEFF00; margin-top: 18px; }
+  .band-title { font-family: 'Noto Sans KR', sans-serif; font-size: clamp(20px,4vw,28px); font-weight: 500; color: #857D6E; margin-top: 20px; line-height: 1.6; }
+  .rule { width: 64px; height: 3px; background: #ceff00; margin: 28px auto 0; }
+  .band-inner { text-align: center; max-width: 720px; padding: 0 24px; }
+
+  /* ---------- case sections ----------
+     The 01/02/03 artwork is authored on a fixed 1376 x 768 canvas (the section
+     art is exported at 2752 x 1536 = exactly @2x), and every child is placed in
+     canvas pixels. So rather than letting the box stretch while its contents stay
+     at fixed px — which clipped the character photo and broke alignment — the
+     whole canvas is scaled to the section width. The composition is then identical
+     at every desktop width. --case-scale is set from JS; the section's own
+     aspect-ratio keeps the box exactly 768 * scale tall, so it always fits. */
+  :root { --case-canvas-w: 1376px; --case-canvas-h: 768px; }
+
+  .case { position: relative; width: 100%; overflow: hidden; }
+  .case-stage {
+    position: absolute; top: 0; left: 0;
+    width: var(--case-canvas-w); height: var(--case-canvas-h);
+    transform-origin: top left;
+    transform: scale(var(--case-scale, 1));
+  }
+  .case-cafefit { background: #2a1f33; }
+  .case-taekwondo { background: #ffffff; }
+  .case-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .case-copy { font-family: 'Source Sans 3', sans-serif; z-index: 2; }
+  .case-index { font-size: 20px; font-weight: 500; color: #CEFF00; }
+  .case-index .num { color: #ceff00; }
+  .meta { display: flex; flex-direction: column; gap: 10px; }
+  .meta-row { display: flex; gap: 12px; font-size: 15px; }
+  .meta-key { font-weight: 800; color: #8E8E8E; white-space: nowrap; flex-shrink: 0; }
+  .meta-val { font-weight: 500; color: #8E8E8E; }
+  .cta img { width: 150px; height: auto; display: block; cursor: pointer; transition: transform 0.18s ease; }
+  .cta:hover img { transform: scale(1.06); }
+
+  /* Desktop-only absolute copy blocks. Anchored top *and* bottom so the trailing
+     .meta (margin-top:auto) lands on the same baseline in every case section. */
+  .case-copy-abs {
+    position: absolute; left: 6.7%; top: 8%; bottom: 8%;
+    display: flex; flex-direction: column;
+  }
+  .case-cafefit .case-copy-abs { width: 40%; color: #ffffff; }
+
+  /* The character photo sits at top:4px + height:756px, so its bottom edge is at
+     760px on the canvas. Align the copy block's bottom (and therefore the trailing
+     USE TOOL / ROLE meta) to that same line. Now that the canvas is a fixed size
+     this is exact at every width — no viewport-dependent fallback needed. */
+  .case-taekwondo { --photo-bottom: 760px; }
+  .case-taekwondo .case-copy-abs {
+    width: 541px; color: var(--ink); z-index: 3;
+    bottom: calc(var(--case-canvas-h) - var(--photo-bottom));
+  }
+  .case-copy-abs .meta { margin-top: auto; }
+  /* Keep the link's hit area on the button itself, not the full column width. */
+  .case-copy-abs .cta { align-self: flex-start; }
+  .tkd-shadow { position: absolute; left: 544px; top: 34px; height: 755px; width: 838px; transform: translate(28px, -14px); z-index: 1; pointer-events: none; }
+  .tkd-character { position: absolute; left: 531px; top: 4px; height: 756px; width: 840px; z-index: 2; pointer-events: none; }
+
+  /* mobile stacked copy */
+  .case-copy-flow { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 40px 6% 36px; }
+  .case-cafefit .case-copy-flow { color: #ffffff; }
+  .case-taekwondo .case-copy-flow { color: var(--ink); }
+  .case-copy-flow .case-index { font-size: 18px; }
+  .case-copy-flow .meta-row { font-size: 13px; gap: 10px; }
+  .case-copy-flow .meta { gap: 8px; margin-top: 12px; }
+  .case-copy-flow .cta img { width: 140px; }
+
+  /* ---------- library ---------- */
+  .case-library { background: var(--card-2); overflow: hidden; }
+  /* The library reflows rather than being pinned in canvas px, so the flex layout
+     lives on the stage — on mobile the stage stops being a canvas and this simply
+     becomes a normal column. */
+  .library-stage { display: flex; align-items: center; box-sizing: border-box; }
+  .library-copy { position: relative; flex: 0 0 34%; max-width: 480px; width: 100%; display: flex; flex-direction: column; font-family: 'Source Sans 3', sans-serif; color: var(--ink); z-index: 3; }
+  .book-title { font-family: 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 600; color: #8E8E8E; }
+  .book-title .light { font-weight: 400; color: #8E8E8E; }
+  .library-copy .meta-row { font-size: 14px; }
+  .library-copy .meta-key, .library-copy .meta-val { font-size: 15px; }
+  .shelf-wrap { position: relative; flex: 1 1 auto; min-width: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 20px; z-index: 2; }
+  .shelf { display: flex; gap: 4%; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .shelf button { border: 0; padding: 0; background: none; width: 44%; max-width: 460px; cursor: pointer; }
+  .shelf img {
+    width: 100%; aspect-ratio: 1191 / 1684; object-fit: cover; border-radius: 4px;
+    border: 2px solid #FFFFFF00; box-shadow: 4px 4px 0px 0px #CEFF003A;
+    cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;
+  }
+  .shelf button:hover img { transform: translateY(-8px); box-shadow: 6px 12px 0 var(--ink); }
+  .shelf-hint { font-family: 'Noto Sans KR', sans-serif; font-size: 14px; color: var(--ink-3); line-height: 1.6; text-align: center; }
+
+  /* ---------- book viewer ---------- */
+  .viewer {
+    position: fixed; inset: 0; z-index: 200; background: rgba(23,20,15,0.6);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .viewer-inner { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .spread { perspective: 1800px; display: flex; box-shadow: 0 30px 60px rgba(0,0,0,0.45); border-radius: 3px; overflow: hidden; }
+  .spread img { width: min(480px, 82vw); height: min(678px, 68vh); object-fit: contain; background: #fff; display: block; }
+  .viewer-bar { display: flex; align-items: center; gap: 28px; }
+  .viewer-bar button {
+    width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #ffffff; font-size: 26px; font-family: 'Source Sans 3', sans-serif; background: none; border: 0;
+  }
+  .viewer-bar button[disabled] { opacity: 0.3; pointer-events: none; }
+  .viewer-count { color: #ffffff; font-family: 'Source Sans 3', sans-serif; font-size: 14px; letter-spacing: 0.08em; }
+  .viewer-close {
+    position: absolute; top: -48px; right: -48px; width: 28px; height: 28px; cursor: pointer;
+    color: #ffffff; font-size: 24px; display: flex; align-items: center; justify-content: center;
+    background: none; border: 0;
+  }
+
+  /* ---------- footer ---------- */
+  .site-footer {
+    position: relative; width: 100%; margin-top: 120px; background: #99e27f; color: var(--ink);
+    padding: 88px 6.7% 40px; font-family: 'Source Sans 3', sans-serif; box-sizing: border-box;
+  }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 48px; }
+  .footer-brand { font-family: 'Computersetak', sans-serif; font-size: clamp(20px,4vw,35px); font-weight: 700; color: var(--surface-pop); }
+  .footer-brand-sub { font-size: clamp(14px,3vw,30px); letter-spacing: 0.1em; color: var(--surface-pop); margin-top: 6px; }
+  .footer-nav { display: flex; flex-direction: column; gap: 10px; margin-top: 40px; }
+  .footer-nav a { font-size: clamp(14px,2.5vw,20px); color: var(--surface-pop); text-decoration: none; }
+  .footer-right { text-align: right; }
+  .footer-slogan { font-family: 'Noto Sans KR', sans-serif; font-size: clamp(20px,4vw,35px); line-height: 1.5; max-width: 420px; color: var(--surface-pop); }
+  .footer-tel { display: block; margin-top: 28px; font-size: clamp(16px,3vw,25px); color: var(--surface-pop); font-weight: 700; text-decoration: none; }
+  .footer-bottom {
+    margin-top: 72px; padding-top: 24px; border-top: 1px solid rgba(23,20,15,0.2);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    font-size: 13px; color: var(--surface-pop);
+  }
+
+  [hidden] { display: none !important; }
+
+  /* ---------- responsive ----------
+     Above 1100px the case sections render as the scaled 1376x768 canvas. Below it
+     the canvas would shrink the body text past readability (~11px and falling), so
+     the sections drop the canvas and reflow into a single stacked column instead. */
+  @media (min-width: 1100px) {
+    /* !important so these beat the component rules that set display (e.g. .case-taekwondo .case-copy-abs) */
+    [data-mobile] { display: none !important; }
+
+    .case { aspect-ratio: 2752 / 1536; }
+    .library-stage { flex-direction: row; gap: 4%; padding: 0 6.7%; }
+    .library-copy, .shelf-wrap { height: 84%; }
+  }
+
+  @media (max-width: 1099.98px) {
+    [data-desktop] { display: none !important; }
+
+    .case { aspect-ratio: auto; }
+    /* Stop being a fixed canvas — lay the contents out in normal flow. */
+    .case-stage { position: static; width: auto; height: auto; transform: none; }
+    .library-stage { flex-direction: column; gap: 32px; padding: 56px 6%; }
+    .library-copy, .shelf-wrap { height: auto; }
+    .library-copy { flex: 0 0 auto; max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="brand">
+    <span class="brand-name">2026 CHOI YU JEONG</span>
+    <span class="brand-sub">PORTFOLIO</span>
+  </div>
+  <nav>
+    <a href="#section-cafefit">01 · Cafe fit</a>
+    <a href="#section-hyuntaekwondo">02 · Hyun Taekwondo</a>
+    <a href="#section-library">03 · Editorial Design</a>
+  </nav>
+</header>
+
+<div style="position: relative;">
+
+  <div class="glow" id="glow"></div>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="stage" id="stage">
+
+      <div class="stage-layer base">
+        <div class="mark-2026"><img src="2026-portfolio.svg" alt="2026 Portfolio"></div>
+        <div class="mark-role"><img src="content-director-designer.svg" alt="Content Director / Designer"></div>
+        <img class="mark-main" id="markMain" src="portfolio-mark-green.svg" alt="Portfolio">
+      </div>
+
+      <div class="stage-layer reveal" id="revealLayer">
+        <div class="mark-2026"><img src="2026-portfolio-white.svg" alt=""></div>
+        <div class="mark-role"><img src="content-director-designer-white.svg" alt=""></div>
+        <img class="mark-main" src="portfolio-mark-white.svg" alt="">
+      </div>
+
+      <button class="hero-connection" id="openCard" type="button" aria-label="연락처 보기">
+        <img src="connection-black.svg" alt="Connection">
+      </button>
+
+      <div class="card-backdrop" id="cardBackdrop" hidden>
+        <div class="contact-card" id="contactCard">
+          <div>
+            <div class="contact-role">Content Director·Designer</div>
+            <div class="contact-name">최유정</div>
+          </div>
+          <a href="https://open.kakao.com/o/spRqNMDi" target="_blank" rel="noopener">
+            <img class="qr" src="qr-code.png" alt="카카오톡 채팅 QR">
+          </a>
+          <div class="contact-hint">스캔 또는 클릭 시 카카오톡 채팅방으로<br>연결됩니다.</div>
+          <div class="contact-tel">010-8267-4220</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ SELECTED WORKS ============ -->
+  <section class="band band-hero-out">
+    <div class="reveal-up" data-reveal>
+      <div class="eyebrow">Selected Works</div>
+      <div class="band-title-display">Case Studies</div>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <section class="band band-interlude">
+    <div class="band-inner reveal-up" data-reveal>
+      <div class="eyebrow">Branding</div>
+      <div class="band-title">브랜드 기획부터 웹까지 설계한<br>Branding Project</div>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <!-- ============ 01 CAFE FIT ============ -->
+  <section class="case case-cafefit" id="section-cafefit">
+    <img class="case-bg" src="cafefit-background.png" alt="">
+
+    <div class="case-stage" data-desktop>
+      <div class="case-copy case-copy-abs reveal-up far" data-reveal>
+        <div class="case-index"><span class="num">01.</span> Branding - CAFE FIT</div>
+        <img src="cafefit-wordmark.png" alt="Cafe fit" style="width: 404px; height: 321px; display: block; margin-top: 8px;">
+        <a class="cta" href="https://yuyuxtal.github.io/cafefit/" target="_blank" rel="noopener" style="display: inline-block; margin-top: 26px;">
+          <img src="cafefit-connection.png" alt="Connection">
+        </a>
+        <div class="meta">
+          <div class="meta-row"><span class="meta-key">USE TOOL.</span><span class="meta-val">Illustrator, Photoshop, Firefly, ChatGPT, Claude</span></div>
+          <div class="meta-row"><span class="meta-key">ROLE.</span><span class="meta-val">Personal Project</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-copy case-copy-flow" data-mobile>
+      <div class="case-index"><span class="num">01.</span> Branding - CAFE FIT</div>
+      <img src="cafefit-wordmark.png" alt="Cafe fit" style="width: min(320px, 80vw); height: auto; display: block;">
+      <a class="cta" href="https://yuyuxtal.github.io/cafefit/" target="_blank" rel="noopener" style="display: inline-block;">
+        <img src="cafefit-connection.png" alt="Connection">
+      </a>
+      <div class="meta">
+        <div class="meta-row"><span class="meta-key">USE TOOL.</span><span class="meta-val">Illustrator, Photoshop, Firefly, ChatGPT, Claude</span></div>
+        <div class="meta-row"><span class="meta-key">ROLE.</span><span class="meta-val">Personal Project</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-interlude">
+    <div class="band-inner reveal-up" data-reveal>
+      <div class="eyebrow">AI Chatbot</div>
+      <div class="band-title">문체와 세계관, 스토리 프롬프트를 제작한<br>AI Chatbot</div>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <!-- ============ 02 HYUN TAEKWONDO ============ -->
+  <section class="case case-taekwondo" id="section-hyuntaekwondo">
+    <div class="case-stage" data-desktop>
+      <img class="tkd-shadow" src="hyuntaekwondo-shadow.png" alt="">
+      <img class="tkd-character" src="hyuntaekwondo-character.png" alt="현태권도 캐릭터">
+
+      <div class="case-copy case-copy-abs reveal-up far" data-reveal>
+        <div class="case-index"><span class="num">02.</span> Character - HYUN TAEKWONDO</div>
+        <img src="hyuntaekwondo-logo.png" alt="현 태권도 HYUN TAEKWONDO" style="width: 404px; height: auto; display: block; margin-top: 16px;">
+        <a class="cta" href="https://yuyuxtal.github.io/hyuntaekwondo/" target="_blank" rel="noopener" style="display: inline-block; margin-top: 26px;">
+          <img src="hyuntaekwondo-connection.png" alt="Connection">
+        </a>
+        <div class="meta">
+          <div class="meta-row"><span class="meta-key">USE TOOL.</span><span class="meta-val">Illustrator, Photoshop, Pixi ai, Novel ai, ChatGPT, Claude</span></div>
+          <div class="meta-row"><span class="meta-key">ROLE.</span><span class="meta-val" style="width: 240px;">Personal Project AI Chatbot Character</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-copy case-copy-flow" data-mobile>
+      <div class="case-index"><span class="num">02.</span> Character - HYUN TAEKWONDO</div>
+      <img src="hyuntaekwondo-logo.png" alt="현 태권도 HYUN TAEKWONDO" style="width: min(320px, 80vw); height: auto; display: block;">
+      <img src="hyuntaekwondo-character.png" alt="현태권도 캐릭터" style="width: min(320px, 80vw); height: auto; align-self: center; display: block;">
+      <a class="cta" href="https://yuyuxtal.github.io/hyuntaekwondo/" target="_blank" rel="noopener" style="display: inline-block;">
+        <img src="hyuntaekwondo-connection.png" alt="Connection">
+      </a>
+      <div class="meta">
+        <div class="meta-row"><span class="meta-key">USE TOOL.</span><span class="meta-val">Illustrator, Photoshop, Pixi ai, Novel ai, ChatGPT, Claude</span></div>
+        <div class="meta-row"><span class="meta-key">ROLE.</span><span class="meta-val">Personal Project AI Chatbot Character</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-interlude">
+    <div class="band-inner reveal-up" data-reveal>
+      <div class="eyebrow">Editorial Design</div>
+      <div class="band-title">브랜드의 가치를 전달하는<br>Catalog &amp; Brochure Design</div>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <!-- ============ 03 EDITORIAL ============ -->
+  <section class="case case-library" id="section-library">
+    <div class="case-stage library-stage">
+      <div class="library-copy reveal-up far" data-reveal>
+        <div class="case-index"><span class="num">03.</span> Editorial Design</div>
+
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px;">
+          <div class="book-title">Cosmetics Catalog <span class="light">- Beauty Collagen</span></div>
+          <div class="meta-row"><span class="meta-key">USE TOOL.</span><span class="meta-val">Illustrator, Photoshop, Indesign</span></div>
+          <div class="meta-row"><span class="meta-key">ROLE.</span><span class="meta-val">Photography, Retouching &amp; Editing</span></div>
+        </div>
+
+        <div style="margin-top: 40px; display: flex; flex-direction: column; gap: 8px;">
+          <div class="book-title">Brochure <span class="light">- 한국잠사박물관</span></div>
+          <div class="meta-row"><span class="meta-key">USE TOOL.</span><span class="meta-val">Illustrator, Photoshop, Indesign, Gemini</span></div>
+          <div class="meta-row"><span class="meta-key">ROLE.</span><span class="meta-val">Retouching, Planning, Editing</span></div>
+        </div>
+      </div>
+
+      <div class="shelf-wrap" id="shelfWrap">
+        <div class="shelf" id="shelf"></div>
+        <div class="shelf-hint">넘겨볼 수 있는 작은 책장, 표지를 눌러 펼쳐보세요.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BOOK VIEWER ============ -->
+  <div class="viewer" id="viewer" hidden>
+    <div class="viewer-inner" id="viewerInner">
+      <div class="spread" id="spread"></div>
+      <div class="viewer-bar">
+        <button type="button" id="prevPage" aria-label="이전 페이지">‹</button>
+        <div class="viewer-count" id="pageLabel"></div>
+        <button type="button" id="nextPage" aria-label="다음 페이지">›</button>
+      </div>
+      <button class="viewer-close" type="button" id="closeViewer" aria-label="닫기">×</button>
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">2026 CHOI YU JEONG</div>
+        <div class="footer-brand-sub">PORTFOLIO</div>
+        <nav class="footer-nav">
+          <a href="#section-cafefit">CafeFit</a>
+          <a href="#section-hyuntaekwondo">Hyeon Taekwondo</a>
+          <a href="#section-library">Editorial Design</a>
+        </nav>
+      </div>
+      <div class="footer-right">
+        <div class="footer-slogan">Let's create something<br>meaningful together.</div>
+        <a class="footer-tel" href="tel:010-8267-4220">010.8267.4220</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Choi Yu Jeong. All Rights Reserved.</span>
+      <span>Designed &amp; Developed by Choi Yu Jeong.</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STAGE_W = 1359, STAGE_H = 833;
+  var CASE_W = 1376;   // case sections are authored on a 1376 x 768 canvas
+
+  var hero = document.getElementById('hero');
+  var stage = document.getElementById('stage');
+  var glow = document.getElementById('glow');
+  var revealLayer = document.getElementById('revealLayer');
+  var markMain = document.getElementById('markMain');
+  var siteHeader = document.getElementById('siteHeader');
+
+  /* ---------- hero stage scale (the rest of the layout is CSS) ---------- */
+  var scale = 1;
+
+  var caseStages = [].slice.call(document.querySelectorAll('.case-stage'));
+
+  function applyLayout() {
+    // A zero-sized viewport (background/prerendered tab) would collapse the stage to scale(0).
+    if (!window.innerWidth || !window.innerHeight) return;
+
+    scale = Math.min(window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
+    stage.style.transform = 'scale(' + scale + ')';
+
+    // Scale each case canvas to its section's width. Below the breakpoint the CSS
+    // drops the transform entirely, so this value is simply ignored there.
+    caseStages.forEach(function (el) {
+      var w = el.parentNode.clientWidth;
+      if (w) el.style.setProperty('--case-scale', w / CASE_W);
+    });
+  }
+
+  /* ---------- hero spotlight ---------- */
+  hero.addEventListener('mousemove', function (e) {
+    var rect = stage.getBoundingClientRect();
+    var x = (e.clientX - rect.left) / scale;
+    var y = (e.clientY - rect.top) / scale;
+
+    revealLayer.style.clipPath = 'circle(340px at ' + x + 'px ' + y + 'px)';
+    glow.style.left = (e.clientX + window.scrollX) + 'px';
+    glow.style.top = (e.clientY + window.scrollY) + 'px';
+    glow.style.opacity = '1';
+  });
+
+  /* ---------- contact card ---------- */
+  var cardBackdrop = document.getElementById('cardBackdrop');
+  document.getElementById('openCard').addEventListener('click', function () { cardBackdrop.hidden = false; });
+  cardBackdrop.addEventListener('click', function () { cardBackdrop.hidden = true; });
+  document.getElementById('contactCard').addEventListener('click', function (e) { e.stopPropagation(); });
+
+  /* ---------- scroll reveal + header ---------- */
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+
+  function onScroll() {
+    var vh = window.innerHeight;
+    siteHeader.classList.toggle('is-visible', window.scrollY > vh * 0.6);
+    revealEls = revealEls.filter(function (el) {
+      // Skip the variant the current breakpoint hides; it has no box to measure.
+      if (!el.offsetWidth && !el.offsetHeight) return true;
+      if (el.getBoundingClientRect().top < vh * 0.85) {
+        el.classList.add('is-visible');
+        return false;
+      }
+      return true;
+    });
+  }
+
+  /* ---------- library ---------- */
+  var BOOKS = {
+    roa:  { name: 'ROA · Collagen', folder: 'roa-book',  prefix: 'roa page',  count: 24 },
+    odit: { name: 'ODIT',           folder: 'odit-book', prefix: 'odit page', count: 8 }
+  };
+
+  function pagePath(key, n) {
+    var b = BOOKS[key];
+    return b.folder + '/' + b.prefix + ' (' + n + ').jpg';
+  }
+
+  // Cover alone, then two-page spreads, then the back cover alone.
+  function getSpreads(key) {
+    var count = BOOKS[key].count;
+    var spreads = [[1]];
+    var n = 2;
+    while (n <= count - 1) { spreads.push([n, n + 1]); n += 2; }
+    spreads.push([count]);
+    return spreads;
+  }
+
+  var viewer = document.getElementById('viewer');
+  var spreadEl = document.getElementById('spread');
+  var pageLabel = document.getElementById('pageLabel');
+  var prevBtn = document.getElementById('prevPage');
+  var nextBtn = document.getElementById('nextPage');
+  var currentBook = null, spreadIndex = 0;
+
+  var shelf = document.getElementById('shelf');
+  Object.keys(BOOKS).forEach(function (key) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    var img = document.createElement('img');
+    img.src = pagePath(key, 1);
+    img.alt = BOOKS[key].name;
+    btn.appendChild(img);
+    btn.addEventListener('click', function () { openBook(key); });
+    shelf.appendChild(btn);
+  });
+
+  function renderSpread() {
+    var spreads = getSpreads(currentBook);
+    var spread = spreads[spreadIndex] || [];
+    var count = BOOKS[currentBook].count;
+
+    spreadEl.innerHTML = '';
+    spread.forEach(function (n) {
+      var img = document.createElement('img');
+      img.src = pagePath(currentBook, n);
+      img.alt = 'page ' + n;
+      spreadEl.appendChild(img);
+    });
+
+    pageLabel.textContent = spread.length === 2
+      ? spread[0] + '-' + spread[1] + ' / ' + count
+      : spread[0] + ' / ' + count;
+
+    prevBtn.disabled = spreadIndex <= 0;
+    nextBtn.disabled = spreadIndex >= spreads.length - 1;
+  }
+
+  function openBook(key) {
+    currentBook = key;
+    spreadIndex = 0;
+    viewer.hidden = false;
+    renderSpread();
+  }
+
+  function closeViewer() { viewer.hidden = true; currentBook = null; }
+
+  function turnPage(delta) {
+    if (!currentBook) return;
+    var next = spreadIndex + delta;
+    if (next < 0 || next >= getSpreads(currentBook).length) return;
+    spreadIndex = next;
+    renderSpread();
+  }
+
+  prevBtn.addEventListener('click', function () { turnPage(-1); });
+  nextBtn.addEventListener('click', function () { turnPage(1); });
+  document.getElementById('closeViewer').addEventListener('click', closeViewer);
+  viewer.addEventListener('click', closeViewer);
+  document.getElementById('viewerInner').addEventListener('click', function (e) { e.stopPropagation(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!currentBook) {
+      if (e.key === 'Escape' && !cardBackdrop.hidden) cardBackdrop.hidden = true;
+      return;
+    }
+    if (e.key === 'Escape') closeViewer();
+    else if (e.key === 'ArrowLeft') turnPage(-1);
+    else if (e.key === 'ArrowRight') turnPage(1);
+  });
+
+  /* ---------- boot ---------- */
+  window.addEventListener('resize', function () { applyLayout(); onScroll(); });
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Re-measure once the viewport actually has a size, however late that happens.
+  if (window.ResizeObserver) {
+    new ResizeObserver(function () { applyLayout(); onScroll(); }).observe(document.documentElement);
+  }
+  window.addEventListener('load', function () { applyLayout(); onScroll(); });
+
+  applyLayout();
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

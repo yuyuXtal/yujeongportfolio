@@ -1,0 +1,19 @@
+/* ============================================================
+   FONTS — Comsetak Design System
+   Display: 210 Computersetak R (Design210) — supplied .ttf
+   Serif:   Source Han Serif K → substituted with Noto Serif KR
+            (identical typeface; Google Fonts). The uploaded
+            SourceHanSerifK OTFs did not arrive — see readme.md.
+   Mono:    system mono stack (no bespoke mono supplied)
+   ============================================================ */
+
+/* Korean editorial serif — Noto Serif KR is the OSS twin of Source Han Serif K */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700;900&display=swap");
+
+@font-face {
+  font-family: "Computersetak";
+  src: url("../assets/fonts/Computersetak-R.ttf") format("truetype");
+  font-weight: 400 700; /* single weight, mapped across the range */
+  font-style: normal;
+  font-display: swap;
+}
